@@ -17,7 +17,6 @@ class SparkService extends SparkSessionWrapper {
     StructField("elb_status_code", IntegerType, nullable = true),
     StructField("backend_status_code", IntegerType, nullable = true),
     StructField("received_bytes", IntegerType, nullable = true),
-    StructField("received_bytes", IntegerType, nullable = true),
     StructField("sent_bytes", IntegerType, nullable = true),
     StructField("request", StringType, nullable = true),
     StructField("user_agent", StringType, nullable = true),
