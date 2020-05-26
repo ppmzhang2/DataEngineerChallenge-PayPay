@@ -6,8 +6,8 @@ import org.scalatest.funsuite.AnyFunSuite
 class SparkTest extends AnyFunSuite {
   test("row count consistent") {
     val sparkService = new SparkService()
-    val df = sparkService.getDF(BasePath)
+    val ds = sparkService.getDS
 
-    assert(df.count() === rowCount)
+    assert(ds.count() === rowCount)
   }
 }
