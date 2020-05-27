@@ -78,13 +78,35 @@ class Dao extends SparkService {
         "`min(timestamp)` AS session_start",
         "`max(timestamp)` AS session_end",
         "`count(timestamp)` AS counts")
-  }
-
-  def avg_session(interval: Long): Double = {
-    aggBySession(interval)
       .withColumn(colName = "session_length",
         col(colName = "session_end").minus(col(colName = "session_start")))
+  }
+
+  def uniqueUrlHits(interval: Long): DataFrame = {
+    val sessionizedDs = sessionizedDataset(interval).cache
+    sessionizedDs.groupBy("session_id", "client_ip",
+      "user_agent", "request_url")
+      .agg(("timestamp", "min"))
+      .groupBy("session_id", "client_ip", "user_agent")
+      .agg(("request_url", "count"))
+      .selectExpr("session_id", "client_ip", "user_agent",
+        "`count(request_url)` AS unique_hits")
+  }
+
+  def mostEngagedUser(interval: Long): DataFrame = {
+    aggBySession(interval)
+      .groupBy("client_ip")
+      .agg(("session_length", "sum"))
+      .selectExpr("client_ip", "`sum(session_length)` AS length")
+      .orderBy(col("length").desc)
+      .limit(10)
+  }
+
+  def avgSessionLength(interval: Long): DataFrame = {
+    aggBySession(interval)
       .select(avg(col(colName = "session_length")))
-      .limit(1).collect.head.getDouble(0)
+      .withColumnRenamed(existingName = "avg(session_length)",
+        newName = "avg_length")
+      .limit(1)
   }
 }

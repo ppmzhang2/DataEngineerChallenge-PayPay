@@ -13,7 +13,7 @@ class SparkTest extends AnyFunSuite {
 
   test("average session length") {
     val dao = new Dao()
-    val res = dao.avg_session(900)
+    val res = dao.avgSessionLength(900).collect.head.getDouble(0)
 
     assert(res === avgSessionLen)
   }
