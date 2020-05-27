@@ -2,7 +2,7 @@ package com.paypay.quiz.models
 
 import java.sql.Timestamp
 
-case class SessionLogFmt(
+case class SessionizedLog(
                 session_id: Long,
                 client_id: Long,
                 timestamp: Timestamp,

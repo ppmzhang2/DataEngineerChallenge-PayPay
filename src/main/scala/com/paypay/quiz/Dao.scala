@@ -1,6 +1,6 @@
 package com.paypay.quiz
 
-import com.paypay.quiz.models.SessionLogFmt
+import com.paypay.quiz.models.SessionizedLog
 import javax.inject.Singleton
 import org.apache.spark.sql.{DataFrame, Dataset}
 import org.apache.spark.sql.expressions.UserDefinedFunction
@@ -11,7 +11,7 @@ import org.apache.spark.sql.functions._
 class Dao extends SparkService {
   import spark.implicits._
 
-  lazy private val ds = getDS
+  lazy private val rawDs = getRawDs
 
   private def expand(interval: Long): UserDefinedFunction = udf {
     (start: Long, end: Long) => {
@@ -20,7 +20,7 @@ class Dao extends SparkService {
   }
 
   def sessions(interval: Long): DataFrame = {
-    ds.groupBy("client_ip", "user_agent")
+    rawDs.groupBy("client_ip", "user_agent")
       .agg(("timestamp", "min"), ("timestamp", "max"))
       .withColumnRenamed(existingName = "min(timestamp)",
         newName = "timestamp_start")
@@ -47,8 +47,8 @@ class Dao extends SparkService {
       .withColumn(colName = "session_id", monotonically_increasing_id())
   }
 
-  def sessionizedDataset(interval: Long): Dataset[SessionLogFmt] = {
-    val log = ds.withColumn(colName = "timestamp",
+  def sessionizedDataset(interval: Long): Dataset[SessionizedLog] = {
+    val log = rawDs.withColumn(colName = "timestamp",
       col(colName = "timestamp").cast(to = "Long")).as(alias = "left").cache()
     val sess = sessions(interval).as(alias = "right").cache()
     log.join(sess,
@@ -64,7 +64,7 @@ class Dao extends SparkService {
         "left.received_bytes", "left.sent_bytes", "left.request_action",
         "left.request_url", "left.request_protocol", "left.user_agent",
         "left.ssl_cipher", "left.ssl_protocol"
-      ).as[SessionLogFmt]
+      ).as[SessionizedLog]
   }
 
   def aggBySession(interval: Long): DataFrame = {

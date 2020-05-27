@@ -2,7 +2,7 @@ package com.paypay.quiz.models
 
 import java.sql.Timestamp
 
-case class LogFmt(
+case class RawLog(
                 timestamp: Timestamp,
                 elb: String,
                 client_ip: String,

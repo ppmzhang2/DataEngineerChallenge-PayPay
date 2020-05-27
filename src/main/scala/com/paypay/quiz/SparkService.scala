@@ -1,6 +1,6 @@
 package com.paypay.quiz
 
-import com.paypay.quiz.models.LogFmt
+import com.paypay.quiz.models.RawLog
 import javax.inject.Singleton
 import org.apache.spark.sql.functions.{col, split}
 import org.apache.spark.sql.types._
@@ -29,8 +29,8 @@ class SparkService extends SparkSessionWrapper {
     StructField("ssl_cipher", StringType, nullable = true),
     StructField("ssl_protocol", StringType, nullable = true)))
 
-  def getDS: Dataset[LogFmt] = {
-    val df = getDF(BasePath)
+  def getRawDs: Dataset[RawLog] = {
+    val df = getRawDf(rawLogPath)
       .withColumn(colName = "seq_client",
         split(col(colName = "client"), pattern = ":"))
       .withColumn(colName = "seq_backend",
@@ -53,10 +53,10 @@ class SparkService extends SparkSessionWrapper {
         col(colName = "seq_request").getItem(key = 2))
       .drop(colNames = "seq_client", "seq_backend", "client", "backend",
         "seq_request", "request")
-    df.as[LogFmt]
+    df.as[RawLog]
   }
 
-  private def getDF(path: String): DataFrame = {
+  private def getRawDf(path: String): DataFrame = {
     spark.read
       .schema(logSchema)
       .option("delimiter", " ")
