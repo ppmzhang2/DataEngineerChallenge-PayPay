@@ -29,10 +29,10 @@ The challenge is to make make analytical observations about the data using the d
 - Flink
 - Cascading, Cascalog, or Scalding
 
-If you need Hadoop, we suggest 
+If you need Hadoop, we suggest
 HDP Sandbox:
 http://hortonworks.com/hdp/downloads/
-or 
+or
 CDH QuickStart VM:
 http://www.cloudera.com/content/cloudera/en/downloads.html
 
@@ -51,7 +51,7 @@ http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/access-log
 1. Fork this repo in github
 2. Complete the processing and analytics as defined first to the best of your ability with the time provided.
 3. Place notes in your code to help with clarity where appropriate. Make it readable enough to present to the PayPay interview team.
-4. Include the test code and data in your solution. 
+4. Include the test code and data in your solution.
 5. Complete your work in your own github repo and send the results to us and/or present them during your interview.
 
 ## What are we looking for? What does this prove?
@@ -61,3 +61,11 @@ We want to see how you handle:
 - Messy (ie real) data
 - Understanding data transformation
 This is not a pass or fail test, we want to hear about your challenges and your successes with this particular problem.
+
+## Answers
+
+The answers are saved in [the answers folder](./answers). Dataset is limited up to 100 rows.
+
+## TODO
+
+Machine Learning Engineer (MLE) quiz.
